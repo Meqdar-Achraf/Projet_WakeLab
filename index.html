@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css"
+      integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe"
+      crossorigin="anonymous"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.21.1/axios.min.js" integrity="sha512-YiweniDPqprdTP7mvKVpKWv3jMGTY9frHzOTmDqbutoqcypYCRo8nfKhhDKnSiXTTMN0kBrDtTozIlM11wqcAg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+    <script src="js/app.js" defer ></script>
+    <title>WakeLab</title>
+  </head>
+
+  <body>
+    <nav class="navbar sm:navbar-expand bg-1 fg-2">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">WakeLab</a>
+        <button
+          class="btn-icon navbar-toggler"
+          type="button"
+          data-bs-toggle="drawer"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon" aria-hidden="true"></span>
+        </button>
+        <dialog
+          class="drawer drawer-end"
+          tabindex="-1"
+          id="navbarNav"
+          aria-labelledby="navbarNavLabel"
+        >
+          <div class="drawer-header">
+            <h5 class="drawer-title" id="navbarNavLabel">Menu</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="drawer"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="drawer-body">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">A propos</a>
+              </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+              </li> -->
+            </ul>
+          </div>
+        </dialog>
+      </div>
+    </nav>
+
+    <main class="px-5">
+      <!-- hero section -->
+      <section class="HeroSection">
+        <h2>Le réveil pédarogique en un clic !</h2>
+        <p>
+          découvrir, créer et gérer des activités pour dynamiser vos formations.
+        </p>
+      </section>
+
+      <!-- Recherche et filtrage -->
+      <section class="RechercheFiltrage row">
+        <div class="titre-search mt-4 col-6 col-lg-6">
+          <form class="d-flex" role="search">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Rechercher une activité par titre..."
+              aria-label="Search"
+            />
+            <button class="btn-outline theme-success" type="submit">
+              Rechercher
+            </button>
+          </form>
+        </div>
+        <div class="theme-filter mt-4  col-6 col-lg-6">
+          <button
+            class="form-control combobox-toggle"
+            type="button"
+            data-bs-toggle="combobox"
+            data-bs-name="option"
+            data-bs-placeholder="Select an item…"
+          >
+            <span class="combobox-value">Select an item…</span>
+            <svg
+              class="combobox-caret"
+              width="10"
+              height="16"
+              viewBox="0 0 10 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0.46967 5.46967C0.762563 5.17678 1.23744 5.17678 1.53033 5.46967L5 8.93934L8.46967 5.46967C8.76256 5.17678 9.23744 5.17678 9.53033 5.46967C9.82322 5.76256 9.82322 6.23744 9.53033 6.53033L5.53033 10.5303C5.23744 10.8232 4.76256 10.8232 4.46967 10.5303L0.46967 6.53033C0.176777 6.23744 0.176777 5.76256 0.46967 5.46967Z"
+                fill="currentcolor"
+              />
+            </svg>
+          </button>
+          <div class="menu">
+            <button
+              class="menu-item"
+              type="button"
+              data-bs-value="apprentissage"
+            >
+              Apprentissage
+            </button>
+            <button class="menu-item" type="button" data-bs-value="jeu">
+              Jeu
+            </button>
+            <button class="menu-item" type="button" data-bs-value="exercice">
+              Exercice
+            </button>
+            <button class="menu-item" type="button" data-bs-value="autre">
+              Autre
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- card des acticités  -->
+      <section id="cards-container" class="row gap-4">
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="activity-card card pt-3 my-4">
+            <div class="d-flex justify-content-evenly pb-3">
+              <span class="chip theme-success"><i class="fa-solid fa-graduation-cap"></i>Apprentissage</span>
+              <span class="badge badge-subtle theme-secondary"><i class="fa-regular fa-clock"></i>15 min</span>
+              <span class="badge badge-subtle theme-inverse"><i class="fa-regular fa-circle-user"></i>Achraf Meqdar</span>
+            </div>
+            <div class="px-6" style="max-width: 540px">
+              <!-- <div>
+              <img src="..." class="card-img-start" alt="..." />
+            </div> -->
+              <div class="card-body">
+                <h4 class="card-title">Quiz express</h4>
+                <p class="card-text">Un quiz rapide pour tester les connaissances du groupes</p>
+                <p><i class="fa-solid fa-bullseye fg-warning"></i>Objectif:<span>Réviser les notions clés</span></p>
+                <div class="py-3">
+                  <button type="button" class="btn-outline theme-accent">
+                    <i class="fa-solid fa-pen"></i> Modifier
+                  </button>
+                  <button type="button" class="btn-outline theme-danger">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                  </button>
+                </div>
+
+                <!-- <p class="card-text">
+                <small class="fg-2">Last updated 3 mins ago</small>
+              </p> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </section>
+    </main>
+  </body>
+</html>
