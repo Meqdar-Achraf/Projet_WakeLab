@@ -1,20 +1,6 @@
-// const { Activity } = require("react");
+// const { default: axios } = require("axios");
 
-// const api = axios.create({
-//   baseURL: "http://localhost:3000/api",
-//   headers: { "Content-Type": "application/json" },
-// });
-
-// const chargerActivites = async () => {
-//   try {
-//     const response = await api.get("/activites");
-//     return response.data;
-//   } catch (error) {
-//     console.error(error.response?.data?.message ?? "API inaccessible");
-//     return [];
-//   }
-// };
-
+// ajouter utilisateur !!!!
 const username = JSON.parse(localStorage.getItem("username"));
 const usermodale = document.getElementById("userModal");
 function Login() {
@@ -38,12 +24,13 @@ function addUser() {
   });
 }
 
-const getData = () => {
-  const api = axios.create({
+// recuperer les donnees
+// let activitesList = []
+const api = axios.create({
     baseURL: "http://localhost:3000/api",
     headers: { "Content-Type": "application/json" },
-  });
-  //   console.log(api.get("/activites"))
+});
+const getData = () => {
   const response = api
     .get("/activites")
     .then((response) => {
@@ -63,6 +50,7 @@ const getData = () => {
 };
 getData();
 
+//  afficher les cards des activites
 const cardContainer = document.getElementById("cards-container");
 function displayActivity(data) {
   data.forEach((activity) => {
@@ -178,3 +166,42 @@ function cardButtons(activity) {
   divButtons.append(modifyButton, timeModifyer, deleteButton);
   return divButtons;
 }
+
+// ajouter activites
+const form = document.getElementById('addActivity')
+console.log(form)
+const activity ={}
+console.log(username)
+document.getElementById('creatActivity').addEventListener('click', event => {ajouterActivite()})
+async function ajouterActivite(){
+  activity.titre = document.getElementById('activity-Name').value
+  activity.theme = document.getElementById('select-theme').value
+  activity.duree = Number(document.getElementById('activity-duree').value)
+  activity.objectifs = document.getElementById('activity-objectifs').value
+  activity.description = document.getElementById('activity-Description').value
+  activity.auteur = username.name
+  activity.createdAt = new Date().toISOString()
+  console.log(activity)
+     try {
+        const response = await api.post("/activites", activity);
+        getData()
+        // console.log("Activité ajoutée :", response.data);
+
+    } catch (error) {
+        console.error("Erreur :", error.response?.data || error.message);
+    }
+}
+
+// function time(){
+//   const Timing = new Date()
+//   const years = Timing.getFullYear()
+//   const month = Timing.getUTCMonth() +1
+//   const day = Timing.getDate()
+//   const hour = Timing.getHours()
+//   const minutes = Timing.getMinutes()
+//   const seconds = Timing.getSeconds()
+//   const milliseconds = Timing.getMilliseconds()
+//   const actionTiming = `${years}-${month}-${day} ${hour}:${minutes}:${seconds}.${milliseconds}`
+//   return actionTiming
+// }
+
