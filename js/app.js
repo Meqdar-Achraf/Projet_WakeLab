@@ -7,7 +7,7 @@ function Login() {
   // usermodale.classList.replace("d-flex", "d-none");
   if (!username) {
     usermodale.classList.replace("d-none", "d-flex");
-    document.body.classList.add('overflow-hidden')
+    document.body.classList.add("overflow-hidden");
     addUser();
   }
 }
@@ -19,7 +19,7 @@ function addUser() {
     user.name = document.getElementById("username").value;
     user.password = document.getElementById("password").value;
     usermodale.classList.replace("d-flex", "d-none");
-    document.body.classList.remove('overflow-hidden')
+    document.body.classList.remove("overflow-hidden");
     localStorage.setItem("username", JSON.stringify(user));
   });
 }
@@ -27,11 +27,13 @@ function addUser() {
 // recuperer les donnees
 // let activitesList = []
 const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    headers: { "Content-Type": "application/json" },
+  baseURL: "http://localhost:3000/api",
+  headers: { "Content-Type": "application/json" },
 });
+
+
 const getData = () => {
-  const response = api
+  return api
     .get("/activites")
     .then((response) => {
       if (response.status != 200)
@@ -45,14 +47,20 @@ const getData = () => {
     .then((data) => {
       console.log(data);
       displayActivity(data);
+    return data
     })
     .catch((error) => console.log(error));
 };
-getData();
+
+getData().then((response) => {
+  deleteActivity();
+});
 
 //  afficher les cards des activites
 const cardContainer = document.getElementById("cards-container");
+
 function displayActivity(data) {
+  cardContainer.replaceChildren();
   data.forEach((activity) => {
     const cardSlot = document.createElement("div");
     // cardSlot.classList.add("", "");
@@ -145,8 +153,8 @@ function cardButtons(activity) {
   const timeModifyer = document.createElement("button");
 
   divButtons.classList.add("py-3", "ps-5", "pb-5", "d-flex", "gap-5");
-  modifyButton.classList.add("btn-outline", "theme-accent");
-  deleteButton.classList.add("btn-outline", "theme-danger");
+  modifyButton.classList.add("mod-btn", "btn-outline", "theme-accent");
+  deleteButton.classList.add("del-btn", "btn-outline", "theme-danger");
   modifyButtonIcon.classList.add("fa-solid", "fa-pen");
   deleteButtonIcon.classList.add("fa-solid", "fa-trash");
   timeModifyer.classList.add("btn-outline", "theme-warning");
@@ -168,40 +176,54 @@ function cardButtons(activity) {
 }
 
 // ajouter activites
-const form = document.getElementById('addActivity')
-console.log(form)
-const activity ={}
-console.log(username)
-document.getElementById('creatActivity').addEventListener('click', event => {ajouterActivite()})
-async function ajouterActivite(){
-  activity.titre = document.getElementById('activity-Name').value
-  activity.theme = document.getElementById('select-theme').value
-  activity.duree = Number(document.getElementById('activity-duree').value)
-  activity.objectifs = document.getElementById('activity-objectifs').value
-  activity.description = document.getElementById('activity-Description').value
-  activity.auteur = username.name
-  activity.createdAt = new Date().toISOString()
-  console.log(activity)
-     try {
-        const response = await api.post("/activites", activity);
-        getData()
-        // console.log("Activité ajoutée :", response.data);
-
-    } catch (error) {
-        console.error("Erreur :", error.response?.data || error.message);
-    }
+const form = document.getElementById("addActivity");
+console.log(form);
+const activity = {};
+console.log(username);
+document.getElementById("creatActivity").addEventListener("click", (event) => {
+  ajouterActivite();
+  form.reset()
+});
+async function ajouterActivite() {
+  activity.titre = document.getElementById("activity-Name").value;
+  activity.theme = document.getElementById("select-theme").value;
+  activity.duree = Number(document.getElementById("activity-duree").value);
+  activity.objectifs = document.getElementById("activity-objectifs").value;
+  activity.description = document.getElementById("activity-Description").value;
+  activity.auteur = username.name;
+  activity.createdAt = new Date().toISOString();
+  console.log(activity);
+  try {
+    const response = await api.post("/activites", activity);
+    getData();
+  } catch (error) {
+    console.error("Erreur :", error.response?.data || error.message);
+  }
 }
 
-// function time(){
-//   const Timing = new Date()
-//   const years = Timing.getFullYear()
-//   const month = Timing.getUTCMonth() +1
-//   const day = Timing.getDate()
-//   const hour = Timing.getHours()
-//   const minutes = Timing.getMinutes()
-//   const seconds = Timing.getSeconds()
-//   const milliseconds = Timing.getMilliseconds()
-//   const actionTiming = `${years}-${month}-${day} ${hour}:${minutes}:${seconds}.${milliseconds}`
-//   return actionTiming
-// }
+// supprimer une card
+function deleteActivity() {
+  const deleteButtons = document.querySelectorAll(".del-btn");
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      console.log(event.target.dataset.activity);
+      confirmation(event);
+      
+    });
+  });
+}
+const log = document.querySelector("#log");
+function confirmation(eventtarget) {
+  if (window.confirm("vous confirmez la suppression de cette activities ?")) {
+    try {
+      api.delete(`/activites/${eventtarget.target.dataset.activity}`).then(res => {
+        getData()
+        window.location.reload();
+        containerVide()
 
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
