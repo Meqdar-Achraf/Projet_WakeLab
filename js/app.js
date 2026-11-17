@@ -1,4 +1,4 @@
-// const { default: axios } = require("axios");
+// import Swal from 'sweetalert2'
 
 // ajouter utilisateur !!!!
 const username = JSON.parse(localStorage.getItem("username"));
@@ -31,7 +31,6 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-
 const getData = () => {
   return api
     .get("/activites")
@@ -47,14 +46,12 @@ const getData = () => {
     .then((data) => {
       console.log(data);
       displayActivity(data);
-    return data
+      deleteActivity();
+      return data;
     })
     .catch((error) => console.log(error));
 };
-
-getData().then((response) => {
-  deleteActivity();
-});
+getData()
 
 //  afficher les cards des activites
 const cardContainer = document.getElementById("cards-container");
@@ -182,7 +179,7 @@ const activity = {};
 console.log(username);
 document.getElementById("creatActivity").addEventListener("click", (event) => {
   ajouterActivite();
-  form.reset()
+  form.reset();
 });
 async function ajouterActivite() {
   activity.titre = document.getElementById("activity-Name").value;
@@ -196,8 +193,20 @@ async function ajouterActivite() {
   try {
     const response = await api.post("/activites", activity);
     getData();
+    Swal.fire({
+      title: "Success",
+      text: "activité été crée avec success!!",
+      icon: "success",
+      theme: "dark",
+    });
   } catch (error) {
     console.error("Erreur :", error.response?.data || error.message);
+    Swal.fire({
+      title: "error",
+      text: "Operation annulée",
+      icon: "success",
+      theme: "dark",
+    });
   }
 }
 
@@ -208,20 +217,26 @@ function deleteActivity() {
     button.addEventListener("click", (event) => {
       console.log(event.target.dataset.activity);
       confirmation(event);
-      
     });
   });
 }
+
 const log = document.querySelector("#log");
 function confirmation(eventtarget) {
   if (window.confirm("vous confirmez la suppression de cette activities ?")) {
     try {
-      api.delete(`/activites/${eventtarget.target.dataset.activity}`).then(res => {
-        getData()
-        window.location.reload();
-        containerVide()
-
-      })
+      api
+        .delete(`/activites/${eventtarget.target.dataset.activity}`)
+        .then((res) => {
+          Swal.fire({
+            title: "success",
+            text: "activité été supprimmé avec success!!",
+            icon: "warning",
+            theme: "dark",
+          });
+          getData();
+          // containerVide();
+        });
     } catch (error) {
       console.log(error);
     }
