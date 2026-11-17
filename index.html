@@ -22,15 +22,26 @@
       integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL"
       crossorigin="anonymous"
     ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.21.1/axios.min.js" integrity="sha512-YiweniDPqprdTP7mvKVpKWv3jMGTY9frHzOTmDqbutoqcypYCRo8nfKhhDKnSiXTTMN0kBrDtTozIlM11wqcAg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-    <script src="js/app.js" defer ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.21.1/axios.min.js"
+      integrity="sha512-YiweniDPqprdTP7mvKVpKWv3jMGTY9frHzOTmDqbutoqcypYCRo8nfKhhDKnSiXTTMN0kBrDtTozIlM11wqcAg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script src="js/app.js" defer></script>
     <title>WakeLab</title>
   </head>
 
-  <body>
+  <body class="">
     <nav class="navbar sm:navbar-expand bg-1 fg-2">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">WakeLab</a>
+        <a class="navbar-brand" href="index.html"
+          ><i class="fa-solid fa-brain fg-accent"></i>Wake<span
+            class="fg-emphasis-info"
+            >Lab</span
+          ></a
+        >
         <button
           class="btn-icon navbar-toggler"
           type="button"
@@ -74,11 +85,43 @@
       </div>
     </nav>
 
+    <div id="userModal" class="d-none flex-column align-items-center col-12 my-10">
+      <div class="modal-body border border-keyline rounded-9 p-5 w-75">
+        <div>
+          <label for="username" class="form-label">username</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            id="username"
+            placeholder="username"
+          />
+        </div>
+
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control form-control-sm"
+          placeholder="Password"
+        />
+        <button type="button" id="addUser" class="btn-solid theme-primary mt-5">
+          Ajouter l'utilisateur
+        </button>
+      </div>
+    </div>
     <main class="px-5">
       <!-- hero section -->
-      <section class="HeroSection">
-        <h2>Le réveil pédarogique en un clic !</h2>
-        <p>
+      <section
+        class="HeroSection p-10 bg-accent rounded-9 mx-10 my-5"
+        style="
+          background-image: url(assets/images/heroSection.png);
+          background-size: cover;
+        "
+      >
+        <h2 class="w-25 mb-5 fg-accent fw-bold">
+          Le réveil pédarogique en un clic !
+        </h2>
+        <p class="w-25 fg-accent fw-semibold">
           découvrir, créer et gérer des activités pour dynamiser vos formations.
         </p>
       </section>
@@ -98,7 +141,7 @@
             </button>
           </form>
         </div>
-        <div class="theme-filter mt-4  col-6 col-lg-6">
+        <div class="theme-filter mt-4 col-6 col-lg-6">
           <button
             class="form-control combobox-toggle"
             type="button"
@@ -143,23 +186,34 @@
       </section>
 
       <!-- card des acticités  -->
-      <section id="cards-container" class="row gap-4">
-
-        <div class="col-12 col-sm-6 col-lg-4">
-          <div class="activity-card card pt-3 my-4">
-            <div class="d-flex justify-content-evenly pb-3">
-              <span class="chip theme-success"><i class="fa-solid fa-graduation-cap"></i>Apprentissage</span>
-              <span class="badge badge-subtle theme-secondary"><i class="fa-regular fa-clock"></i>15 min</span>
-              <span class="badge badge-subtle theme-inverse"><i class="fa-regular fa-circle-user"></i>Achraf Meqdar</span>
+      <section id="cards-container" class="row">
+        <div id="cardslot" class="">
+          <div id="card" class="activity-card card pt-3 my-4">
+            <div id="supcard" class="d-flex justify-content-evenly pb-3">
+              <span class="chip theme-success"
+                ><i class="fa-solid fa-graduation-cap"></i>Apprentissage</span
+              >
+              <span class="badge badge-subtle theme-secondary"
+                ><i class="fa-regular fa-clock"></i>15 min</span
+              >
+              <span class="badge badge-subtle theme-inverse"
+                ><i class="fa-regular fa-circle-user"></i>Achraf Meqdar</span
+              >
             </div>
-            <div class="px-6" style="max-width: 540px">
+            <div id="cardinnerinfo" class="px-6" style="max-width: 540px">
               <!-- <div>
               <img src="..." class="card-img-start" alt="..." />
-            </div> -->
-              <div class="card-body">
+              </div> -->
+              <div id="cardbody" class="card-body">
                 <h4 class="card-title">Quiz express</h4>
-                <p class="card-text">Un quiz rapide pour tester les connaissances du groupes</p>
-                <p><i class="fa-solid fa-bullseye fg-warning"></i>Objectif:<span>Réviser les notions clés</span></p>
+                <p class="card-text">
+                  Un quiz rapide pour tester les connaissances du groupes
+                </p>
+                <p>
+                  <i class="fa-solid fa-bullseye fg-warning"></i>Objectif:<span
+                    >Réviser les notions clés</span
+                  >
+                </p>
                 <div class="py-3">
                   <button type="button" class="btn-outline theme-accent">
                     <i class="fa-solid fa-pen"></i> Modifier
@@ -171,15 +225,76 @@
 
                 <!-- <p class="card-text">
                 <small class="fg-2">Last updated 3 mins ago</small>
-              </p> -->
+                </p> -->
               </div>
             </div>
           </div>
         </div>
-
-
-
       </section>
+
+      <form class="row mb-10 border border-keyline rounded-9 p-3">
+        <h3>
+          <i class="fa-solid fa-circle-plus fg-accent"></i> Ajouter une acticité
+        </h3>
+        <div class="mb-3 col-4">
+          <label for="activity-Name" class="form-label">Titre:</label>
+          <input
+            type="name"
+            class="form-control"
+            id="activity-Name"
+            placeholder="Ex: Brise-glace"
+          />
+        </div>
+        <div class="mb-3 col-4">
+          <div class="form-field">
+            <label for="selecttheme" class="form-label">theme</label>
+            <select class="form-control form-control-caret" id="selecttheme">
+              <option>selectionner un theme...</option>
+              <option value="apprentissage">Apprentissage</option>
+              <option value="jeu">Jeu</option>
+              <option value="exercice">Exercice</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3 col-4">
+          <label for="duree" class="form-label fw-semibold">
+            Durée (min): <span class="text-danger"></span>
+          </label>
+
+          <input
+            type="number"
+            class="form-control duration-input"
+            id="duree"
+            name="duree"
+            min="10"
+            max="20"
+            step="1"
+            value="10"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="activity-objectifs" class="form-label"
+            >Objectifs pédagogique: (Optionnel)</label
+          >
+          <input type="text" class="form-control" id="activity-objectifs" />
+        </div>
+        <div class="form-field mb-5">
+          <label for="activity-Description" class="form-label"
+            >Description</label
+          >
+          <textarea
+            class="form-control"
+            id="activity-Description"
+            placeholder="Décrivez le déroulement d'activité..."
+          ></textarea>
+        </div>
+        <button type="submit" class="btn-solid theme-primary">
+          Créez l'activité
+        </button>
+      </form>
     </main>
   </body>
 </html>
