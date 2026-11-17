@@ -15,6 +15,29 @@
 //   }
 // };
 
+const username = JSON.parse(localStorage.getItem("username"));
+const usermodale = document.getElementById("userModal");
+function Login() {
+  // usermodale.classList.replace("d-flex", "d-none");
+  if (!username) {
+    usermodale.classList.replace("d-none", "d-flex");
+    document.body.classList.add('overflow-hidden')
+    addUser();
+  }
+}
+Login();
+
+function addUser() {
+  const user = {};
+  document.getElementById("addUser").addEventListener("click", (event) => {
+    user.name = document.getElementById("username").value;
+    user.password = document.getElementById("password").value;
+    usermodale.classList.replace("d-flex", "d-none");
+    document.body.classList.remove('overflow-hidden')
+    localStorage.setItem("username", JSON.stringify(user));
+  });
+}
+
 const getData = () => {
   const api = axios.create({
     baseURL: "http://localhost:3000/api",
@@ -33,19 +56,18 @@ const getData = () => {
       return response.data;
     })
     .then((data) => {
-      console.log(data)
-      displayActivity(data)})
+      console.log(data);
+      displayActivity(data);
+    })
     .catch((error) => console.log(error));
 };
 getData();
-
-// function Login()
 
 const cardContainer = document.getElementById("cards-container");
 function displayActivity(data) {
   data.forEach((activity) => {
     const cardSlot = document.createElement("div");
-    cardSlot.classList.add("col-md-3", "col-4");
+    // cardSlot.classList.add("", "");
     const card = document.createElement("div");
     card.classList.add("activity-card", "card", "pt-3", "my-4");
     cardSlot.appendChild(card);
@@ -72,11 +94,11 @@ function supCardInfo(activity) {
       theme.classList.add("chip", "theme-primary");
       themeIcon.classList.add("fa-solid", "fa-gamepad");
       break;
-    case 'exrcice':
+    case "exrcice":
       theme.classList.add("chip", "theme-danger");
       themeIcon.classList.add("fa-solid", "fa-dumbbell");
       break;
-    default: 
+    default:
       theme.classList.add("chip", "theme-info");
       themeIcon.classList.add("fa-brands", "fa-ethereum");
       break;
@@ -132,12 +154,14 @@ function cardButtons(activity) {
   const deleteButton = document.createElement("button");
   const modifyButtonIcon = document.createElement("i");
   const deleteButtonIcon = document.createElement("i");
+  const timeModifyer = document.createElement("button");
 
-  divButtons.classList.add("py-3", "ps-12", "pb-5", "d-flex", "gap-6");
+  divButtons.classList.add("py-3", "ps-5", "pb-5", "d-flex", "gap-5");
   modifyButton.classList.add("btn-outline", "theme-accent");
   deleteButton.classList.add("btn-outline", "theme-danger");
   modifyButtonIcon.classList.add("fa-solid", "fa-pen");
   deleteButtonIcon.classList.add("fa-solid", "fa-trash");
+  timeModifyer.classList.add("btn-outline", "theme-warning");
 
   modifyButton.setAttribute("type", "button");
   modifyButton.setAttribute("data-activity", `${activity.id}`);
@@ -149,8 +173,8 @@ function cardButtons(activity) {
 
   modifyButton.textContent = "Modifier";
   deleteButton.textContent = "Supprimer";
+  timeModifyer.textContent = "Modifier la durée";
 
-  divButtons.append(modifyButton, deleteButton);
+  divButtons.append(modifyButton, timeModifyer, deleteButton);
   return divButtons;
 }
-
