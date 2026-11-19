@@ -1,4 +1,3 @@
-// import Swal from 'sweetalert2'
 
 // ajouter utilisateur !!!!
 const username = JSON.parse(localStorage.getItem("username"));
@@ -25,7 +24,6 @@ function addUser() {
 }
 
 // recuperer les donnees
-// let activitesList = []
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
   headers: { "Content-Type": "application/json" },
@@ -47,11 +45,13 @@ const getData = () => {
       console.log(data);
       displayActivity(data);
       deleteActivity();
+      clickmodifier(data);
+      RecherchActivite(data)
       return data;
     })
     .catch((error) => console.log(error));
 };
-getData()
+getData();
 
 //  afficher les cards des activites
 const cardContainer = document.getElementById("cards-container");
@@ -174,24 +174,26 @@ function cardButtons(activity) {
 
 // ajouter activites
 const form = document.getElementById("addActivity");
-console.log(form);
 const activity = {};
-console.log(username);
 document.getElementById("creatActivity").addEventListener("click", (event) => {
   ajouterActivite();
   form.reset();
 });
-async function ajouterActivite() {
+
+function activitesValues(activity) {
   activity.titre = document.getElementById("activity-Name").value;
   activity.theme = document.getElementById("select-theme").value;
   activity.duree = Number(document.getElementById("activity-duree").value);
   activity.objectifs = document.getElementById("activity-objectifs").value;
   activity.description = document.getElementById("activity-Description").value;
   activity.auteur = username.name;
-  activity.createdAt = new Date().toISOString();
-  console.log(activity);
+  // activity.createdAt = new Date().toISOString();
+  return activity;
+}
+
+async function ajouterActivite() {
   try {
-    const response = await api.post("/activites", activity);
+    const response = await api.post("/activites", activitesValues(activity));
     getData();
     Swal.fire({
       title: "Success",
@@ -215,7 +217,6 @@ function deleteActivity() {
   const deleteButtons = document.querySelectorAll(".del-btn");
   deleteButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
-      console.log(event.target.dataset.activity);
       confirmation(event);
     });
   });
@@ -231,14 +232,77 @@ function confirmation(eventtarget) {
           Swal.fire({
             title: "success",
             text: "activité été supprimmé avec success!!",
-            icon: "warning",
+            icon: "success",
             theme: "dark",
           });
           getData();
-          // containerVide();
         });
     } catch (error) {
       console.log(error);
     }
   }
+}
+
+// modification des activités
+let modifyToActivity
+let ActId
+
+function clickmodifier(activities) {
+  const modifybuttons = document.querySelectorAll(".mod-btn");
+  modifybuttons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      ActId = event.target.dataset.activity
+      modifyToActivity = activities.find(
+        (activity) => activity.id == ActId
+      );
+      modifyinputvalue(modifyToActivity);
+      changeFormulaire("form-titleAdd","creatActivity","form-titleMod","ModifyButtonContainer");
+
+    });
+  });
+}
+document.getElementById("modifyActivity").addEventListener('click', ()=>{
+  modifyActivities(modifyToActivity, ActId)
+  changeFormulaire("form-titleMod","ModifyButtonContainer", "form-titleAdd","creatActivity");
+  form.reset()
+})
+
+document.getElementById('annulerModification').addEventListener('click', ()=>{
+  changeFormulaire("form-titleMod","ModifyButtonContainer", "form-titleAdd","creatActivity");
+  form.reset()
+})
+function modifyinputvalue(activityTomodify) {
+  document.getElementById("activity-Name").value = activityTomodify.titre;
+  document.getElementById("select-theme").value = activityTomodify.theme;
+  document.getElementById("activity-duree").value = activityTomodify.duree;
+  document.getElementById("activity-objectifs").value = activityTomodify.objectifs;
+  document.getElementById("activity-Description").value = activityTomodify.description;
+}
+function changeFormulaire(item1dNone,item2dNone,item1,item2) {
+  document.getElementById(item1dNone).classList.add('d-none');
+  document.getElementById(item1).classList.remove('d-none');
+  document.getElementById(item2dNone).classList.add('d-none')
+  document.getElementById(item2).classList.remove('d-none')
+
+}
+async function modifyActivities(acticitytomodify,id){
+  activitesValues(acticitytomodify)
+    await api.put(`/activites/${id}`, acticitytomodify)
+        Swal.fire({
+          title: "success",
+          text: "activité été modifié avec success!!",
+          icon: "success",
+          theme: "dark",
+        });
+        getData();
+}
+
+
+// search function 
+function RecherchActivite(activities){
+  const searchInputValue = document.getElementById('search')
+document.getElementById('searchbutton').addEventListener('click', ()=>{
+  const searchresult = activities.filter(activity => activity.titre.toLowerCase().includes(searchInputValue.value.toLowerCase()) )
+  console.log(searchresult)
+})
 }
