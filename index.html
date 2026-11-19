@@ -29,7 +29,8 @@
       referrerpolicy="no-referrer"
       defer
     ></script>
-    <script src="js/app.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="js/app.js" defer type="module"></script>
     <title>WakeLab</title>
   </head>
 
@@ -85,7 +86,10 @@
       </div>
     </nav>
 
-    <div id="userModal" class="d-none flex-column align-items-center col-12 my-10">
+    <div
+      id="userModal"
+      class="d-none flex-column align-items-center col-12 my-10"
+    >
       <div class="modal-body border border-keyline rounded-9 p-5 w-75">
         <div>
           <label for="username" class="form-label">username</label>
@@ -112,6 +116,7 @@
     <main class="px-5">
       <!-- hero section -->
       <section
+      id="heroSection"
         class="HeroSection p-10 bg-accent rounded-9 mx-10 my-5"
         style="
           background-image: url(assets/images/heroSection.png);
@@ -131,12 +136,13 @@
         <div class="titre-search mt-4 col-6 col-lg-6">
           <form class="d-flex" role="search">
             <input
+              id="search"
               class="form-control me-2"
               type="search"
               placeholder="Rechercher une activité par titre..."
               aria-label="Search"
             />
-            <button class="btn-outline theme-success" type="submit">
+            <button id="searchbutton" class="btn-outline theme-success" type="button">
               Rechercher
             </button>
           </form>
@@ -232,9 +238,15 @@
         </div>
       </section>
 
-      <form class="row mb-10 border border-keyline rounded-9 p-3">
-        <h3>
-          <i class="fa-solid fa-circle-plus fg-accent"></i> Ajouter une acticité
+      <form
+        id="addActivity"
+        class="row mb-10 border border-keyline rounded-9 p-3"
+      >
+        <h3 id="form-titleAdd">
+          <i class="fa-solid fa-circle-plus fg-accent"></i> Ajouter une acticité:
+        </h3>
+        <h3 id="form-titleMod" class="d-none">
+          <i class="fa-solid fa-pen fg-accent"></i> Modifier Activité:
         </h3>
         <div class="mb-3 col-4">
           <label for="activity-Name" class="form-label">Titre:</label>
@@ -247,8 +259,8 @@
         </div>
         <div class="mb-3 col-4">
           <div class="form-field">
-            <label for="selecttheme" class="form-label">theme</label>
-            <select class="form-control form-control-caret" id="selecttheme">
+            <label for="select-theme" class="form-label">theme</label>
+            <select class="form-control form-control-caret" id="select-theme">
               <option>selectionner un theme...</option>
               <option value="apprentissage">Apprentissage</option>
               <option value="jeu">Jeu</option>
@@ -258,14 +270,14 @@
           </div>
         </div>
         <div class="mb-3 col-4">
-          <label for="duree" class="form-label fw-semibold">
+          <label for="activity-duree" class="form-label fw-semibold">
             Durée (min): <span class="text-danger"></span>
           </label>
 
           <input
             type="number"
             class="form-control duration-input"
-            id="duree"
+            id="activity-duree"
             name="duree"
             min="10"
             max="20"
@@ -291,10 +303,29 @@
             placeholder="Décrivez le déroulement d'activité..."
           ></textarea>
         </div>
-        <button type="submit" class="btn-solid theme-primary">
+        <button
+          id="creatActivity"
+          type="button"
+          class="btn-solid theme-primary"
+        >
           Créez l'activité
         </button>
+        <div id="ModifyButtonContainer" class=" d-flex d-none justify-content-between gap-10">
+          <button
+            id="modifyActivity"
+            type="button"
+            class="btn-solid theme-warning w-50 "
+          >
+            Modifiez l'activité
+          </button>
+          <button type="button" id="annulerModification" class="btn-solid theme-inverse w-50">
+            Anuller
+          </button>
+        </div>
+        
       </form>
+      <pre id="log"></pre>
     </main>
+    <!-- <button href="#heroSection">hello</button> -->
   </body>
 </html>
