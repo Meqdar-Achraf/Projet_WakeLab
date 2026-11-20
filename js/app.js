@@ -1,3 +1,4 @@
+
 const regexusername = /^[A-Za-z]+(?: [A-Za-z'-]+)+$/;
 const regexTitre = /^.{5,100}$/;
 const regexDescription = /^.{20,1000}$/;
@@ -59,6 +60,7 @@ const getData = () => {
       clickmodifier(data);
       RecherchActivite(data);
       clickmodifyTime(data)
+      filteractivites(data)
       return data;
     })
     .catch((error) => console.log(error));
@@ -272,7 +274,6 @@ function clickmodifier(activities) {
       form.scrollIntoView({ behavior: "smooth" });
       buttonOfModifcation = event.target;  
       changeButtonselectedstatus(buttonOfModifcation, true)
-      console.log(buttonOfModifcation.isSelected)
       modifyToActivity = activities.find((activity) => activity.id == buttonOfModifcation.dataset.activity);
       modifyinputvalue(modifyToActivity);
       changeFormulaire(
@@ -311,16 +312,41 @@ async function modifyActivities(acticitytomodify, id) {
 // ========================================================================================
 
 // search function======================================================================================
+const searchInputValue = document.getElementById("search");
 function RecherchActivite(activities) {
-  const searchInputValue = document.getElementById("search");
   document.getElementById("searchbutton").addEventListener("click", () => {
     const searchresult = activities.filter((activity) =>
       activity.titre
         .toLowerCase()
         .includes(searchInputValue.value.toLowerCase()),
     );
+    displayActivity(searchresult)
+    RecherchActivite(activities)
+    if(!searchresult.length) cardContainer.appendChild(noresult())
+    document.getElementById('filter-theme').value = 'all'
   });
 }
+
+function noresult(){
+  const None = document.createElement('div')
+  None.classList.add('card', 'card-body', 'theme-danger', 'my-5', 'fg-danger')
+  None.textContent = 'Aucune activity trouvé.'
+  return None
+}
+// filter par theme =============================================================================
+function  filteractivites(activities){
+  document.getElementById('filter-theme').addEventListener('change', event =>{
+    const filterresult = activities.filter((activity) =>activity.theme == event.target.value);
+    displayActivity(filterresult)
+    if(event.target.value == 'all') displayActivity(activities)
+    if(!filterresult.length) cardContainer.appendChild(noresult())
+      searchInputValue.value = ""
+    RecherchActivite(activities)
+    
+})
+}
+
+
 
 // modifier la duree======================================================================================
 
@@ -333,7 +359,6 @@ function clickmodifyTime(activities){
     timeModificationButton.isSelected = false
     button.addEventListener('click', event =>{
       const dureToModify = activities.find(activity => activity.id == event.target.dataset.activity);
-      console.log(dureToModify)
       inputdisabled(form, true)
       modifyinputvalue(dureToModify)
       changeFormulaire("form-titleAdd","creatActivity","form-titleMod","ModifyButtonContainer");
@@ -354,14 +379,15 @@ function inputdisabled(formulaire, status){
 
 async function modifierDuree(){
   await api.patch(`/activites/${timeModificationActicity.id}`, {duree: Number(document.getElementById('activity-duree').value)})
-  console.log(timeModificationActicity.id)
-  console.log(document.getElementById('activity-duree').value)
-  // timeModificationActicity.duree = Number(document.getElementById('activity-duree').value)
-  console.log(timeModificationActicity)
   inputdisabled(form, false)
   changeButtonselectedstatus(timeModificationButton, false)
   getData();
-
+  Swal.fire({
+    title: 'success',
+    text: 'duree été modifié avec success',
+    icon:'success',
+    theme: 'dark'
+  })
 }
 
 // Annuler Modification & commun functions ===========================================================
@@ -387,7 +413,6 @@ document.getElementById("modifyActivity").addEventListener("click", () => {
     modifyActivities(modifyToActivity, buttonOfModifcation.dataset.activity);  
     changeButtonselectedstatus(buttonOfModifcation, false)
   }
-  console.log(timeModificationButton)
   if(timeModificationButton.isSelected){
     modifierDuree()
   }
