@@ -69,21 +69,22 @@ getData();
 
 //  afficher les cards des activites======================================================================================
 const cardContainer = document.getElementById("cards-container");
+// cardContainer.style.paddingInline = ''
 
 function displayActivity(data) {
   cardContainer.replaceChildren();
   data.forEach((activity) => {
-    const cardSlot = document.createElement("div");
-    // cardSlot.classList.add("", "");
     const card = document.createElement("div");
+    // card.style.width = '32%'
+
+    // card.classList.add("activity-card", "card", "pt-3", "my-4",'col-12', 'md:col-6', 'lg:col-4');
     card.classList.add("activity-card", "card", "pt-3", "my-4");
-    cardSlot.appendChild(card);
     card.append(
       supCardInfo(activity),
       cardDescription(activity),
       cardButtons(activity),
     );
-    cardContainer.appendChild(cardSlot);
+    cardContainer.appendChild(card);
   });
 }
 
