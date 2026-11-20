@@ -95,39 +95,42 @@ function supCardInfo(activity) {
   const themeIcon = document.createElement("i");
   switch (activity.theme) {
     case "apprentissage":
-      theme.classList.add("chip", "theme-success");
+      theme.classList.add("chip", "theme-success", 'd-flex', 'align-items-center');
       themeIcon.classList.add("fa-solid", "fa-graduation-cap");
       break;
     case "jeu":
-      theme.classList.add("chip", "theme-primary");
+      theme.classList.add("chip", "theme-primary", 'd-flex', 'align-items-center');
       themeIcon.classList.add("fa-solid", "fa-gamepad");
       break;
     case "exrcice":
-      theme.classList.add("chip", "theme-danger");
+      theme.classList.add("chip", "theme-danger", 'd-flex', 'align-items-center');
       themeIcon.classList.add("fa-solid", "fa-dumbbell");
       break;
     default:
-      theme.classList.add("chip", "theme-info");
+      theme.classList.add("chip", "theme-info", 'd-flex', 'align-items-center');
       themeIcon.classList.add("fa-brands", "fa-ethereum");
       break;
   }
   const duree = document.createElement("span");
-  duree.classList.add("badge", "badge-subtle", "theme-secondary");
+  duree.classList.add("badge", "badge-subtle", "theme-secondary", 'd-flex', 'align-items-center');
   const dureeIcon = document.createElement("i");
   dureeIcon.classList.add("fa-solid", "fa-clock");
 
   const user = document.createElement("span");
-  user.classList.add("badge", "badge-subtle", "theme-inverse");
+  user.classList.add("badge", "badge-subtle", "theme-inverse", 'd-flex', 'align-items-center');
   const userIcon = document.createElement("i");
   userIcon.classList.add("fa-solid", "fa-circle-user");
-
-  theme.append(themeIcon);
-  duree.append(dureeIcon);
-  user.append(userIcon);
-
-  theme.textContent += activity.theme;
+    theme.textContent += activity.theme;
   duree.textContent += `${activity.duree} min`;
   user.textContent += activity.auteur;
+
+  theme.prepend(themeIcon);
+  duree.prepend(dureeIcon);
+  user.prepend(userIcon);
+
+  // theme.textContent += activity.theme;
+  // duree.textContent += `${activity.duree} min`;
+  // user.textContent += activity.auteur;
   supcard.append(theme, duree, user);
   return supcard;
 }
