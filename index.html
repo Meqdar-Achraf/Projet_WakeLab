@@ -133,7 +133,7 @@
 
       <!-- Recherche et filtrage -->
       <section class="RechercheFiltrage row">
-        <div class="titre-search mt-4 col-6 col-lg-6">
+        <div class="titre-search mt-4 col-12 md:col-6">
           <form class="d-flex" role="search">
             <input
               id="search"
@@ -161,50 +161,7 @@
       </section>
 
       <!-- card des acticités  -->
-      <section id="cards-container" class="row">
-        <div id="cardslot" class="">
-          <div id="card" class="activity-card card pt-3 my-4">
-            <div id="supcard" class="d-flex justify-content-evenly pb-3">
-              <span class="chip theme-success"
-                ><i class="fa-solid fa-graduation-cap"></i>Apprentissage</span
-              >
-              <span class="badge badge-subtle theme-secondary"
-                ><i class="fa-regular fa-clock"></i>15 min</span
-              >
-              <span class="badge badge-subtle theme-inverse"
-                ><i class="fa-regular fa-circle-user"></i>Achraf Meqdar</span
-              >
-            </div>
-            <div id="cardinnerinfo" class="px-6" style="max-width: 540px">
-              <!-- <div>
-              <img src="..." class="card-img-start" alt="..." />
-              </div> -->
-              <div id="cardbody" class="card-body">
-                <h4 class="card-title">Quiz express</h4>
-                <p class="card-text">
-                  Un quiz rapide pour tester les connaissances du groupes
-                </p>
-                <p>
-                  <i class="fa-solid fa-bullseye fg-warning"></i>Objectif:<span
-                    >Réviser les notions clés</span
-                  >
-                </p>
-                <div class="py-3">
-                  <button type="button" class="btn-outline theme-accent">
-                    <i class="fa-solid fa-pen"></i> Modifier
-                  </button>
-                  <button type="button" class="btn-outline theme-danger">
-                    <i class="fa-solid fa-trash"></i> Supprimer
-                  </button>
-                </div>
-
-                <!-- <p class="card-text">
-                <small class="fg-2">Last updated 3 mins ago</small>
-                </p> -->
-              </div>
-            </div>
-          </div>
-        </div>
+      <section id="cards-container" class="d-grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       </section>
 
       <form
