@@ -1,3 +1,6 @@
+const regexusername = /^[A-Za-z]+(?: [A-Za-z'-]+)+$/;
+const regexTitre = /^.{5,100}$/;
+const regexDescription = /^.{20,1000}$/;
 
 // ajouter utilisateur !!!!
 const username = JSON.parse(localStorage.getItem("username"));
@@ -17,13 +20,21 @@ function addUser() {
   document.getElementById("addUser").addEventListener("click", (event) => {
     user.name = document.getElementById("username").value;
     user.password = document.getElementById("password").value;
-    usermodale.classList.replace("d-flex", "d-none");
-    document.body.classList.remove("overflow-hidden");
-    localStorage.setItem("username", JSON.stringify(user));
+    if (!regexusername.test(user.name)) {
+      Swal.fire({
+        title: "Error",
+        text: "Le nom complet doit contenir au moins deux parties",
+        icon: "warning",
+      });
+    } else {
+      usermodale.classList.replace("d-flex", "d-none");
+      document.body.classList.remove("overflow-hidden");
+      localStorage.setItem("username", JSON.stringify(user));
+    }
   });
 }
 
-// recuperer les donnees
+// recuperer les donnees======================================================================================
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
   headers: { "Content-Type": "application/json" },
@@ -46,14 +57,15 @@ const getData = () => {
       displayActivity(data);
       deleteActivity();
       clickmodifier(data);
-      RecherchActivite(data)
+      RecherchActivite(data);
+      clickmodifyTime(data)
       return data;
     })
     .catch((error) => console.log(error));
 };
 getData();
 
-//  afficher les cards des activites
+//  afficher les cards des activites======================================================================================
 const cardContainer = document.getElementById("cards-container");
 
 function displayActivity(data) {
@@ -154,12 +166,14 @@ function cardButtons(activity) {
   deleteButton.classList.add("del-btn", "btn-outline", "theme-danger");
   modifyButtonIcon.classList.add("fa-solid", "fa-pen");
   deleteButtonIcon.classList.add("fa-solid", "fa-trash");
-  timeModifyer.classList.add("btn-outline", "theme-warning");
+  timeModifyer.classList.add("time-btn", "btn-outline", "theme-warning");
 
   modifyButton.setAttribute("type", "button");
   modifyButton.setAttribute("data-activity", `${activity.id}`);
   deleteButton.setAttribute("type", "button");
   deleteButton.setAttribute("data-activity", `${activity.id}`);
+  timeModifyer.setAttribute("type", "button");
+  timeModifyer.setAttribute("data-activity", `${activity.id}`);
 
   modifyButton.appendChild(modifyButtonIcon);
   deleteButton.appendChild(deleteButtonIcon);
@@ -172,7 +186,7 @@ function cardButtons(activity) {
   return divButtons;
 }
 
-// ajouter activites
+// ajouter activites======================================================================================
 const form = document.getElementById("addActivity");
 const activity = {};
 document.getElementById("creatActivity").addEventListener("click", (event) => {
@@ -193,14 +207,16 @@ function activitesValues(activity) {
 
 async function ajouterActivite() {
   try {
-    const response = await api.post("/activites", activitesValues(activity));
-    getData();
-    Swal.fire({
-      title: "Success",
-      text: "activité été crée avec success!!",
-      icon: "success",
-      theme: "dark",
-    });
+    // if (InputsValidation(activity)) {
+      const response = await api.post("/activites", activitesValues(activity));
+      getData();
+      Swal.fire({
+        title: "Success",
+        text: "activité été crée avec success!!",
+        icon: "success",
+        theme: "dark",
+      });
+    // }
   } catch (error) {
     console.error("Erreur :", error.response?.data || error.message);
     Swal.fire({
@@ -212,7 +228,7 @@ async function ajouterActivite() {
   }
 }
 
-// supprimer une card
+// supprimer une card======================================================================================
 function deleteActivity() {
   const deleteButtons = document.querySelectorAll(".del-btn");
   deleteButtons.forEach((button) => {
@@ -243,66 +259,170 @@ function confirmation(eventtarget) {
   }
 }
 
-// modification des activités
-let modifyToActivity
-let ActId
+// modification des activités======================================================================================
+let modifyToActivity;
+let buttonOfModifcation;
 
 function clickmodifier(activities) {
   const modifybuttons = document.querySelectorAll(".mod-btn");
   modifybuttons.forEach((button) => {
+    buttonOfModifcation = button
+    buttonOfModifcation.isSelected = false
     button.addEventListener("click", (event) => {
-      ActId = event.target.dataset.activity
-      modifyToActivity = activities.find(
-        (activity) => activity.id == ActId
-      );
+      form.scrollIntoView({ behavior: "smooth" });
+      buttonOfModifcation = event.target;  
+      changeButtonselectedstatus(buttonOfModifcation, true)
+      console.log(buttonOfModifcation.isSelected)
+      modifyToActivity = activities.find((activity) => activity.id == buttonOfModifcation.dataset.activity);
       modifyinputvalue(modifyToActivity);
-      changeFormulaire("form-titleAdd","creatActivity","form-titleMod","ModifyButtonContainer");
-
+      changeFormulaire(
+        "form-titleAdd",
+        "creatActivity",
+        "form-titleMod",
+        "ModifyButtonContainer",
+      );
+      skipModification(buttonOfModifcation)
     });
   });
 }
-document.getElementById("modifyActivity").addEventListener('click', ()=>{
-  modifyActivities(modifyToActivity, ActId)
-  changeFormulaire("form-titleMod","ModifyButtonContainer", "form-titleAdd","creatActivity");
-  form.reset()
-})
 
-document.getElementById('annulerModification').addEventListener('click', ()=>{
-  changeFormulaire("form-titleMod","ModifyButtonContainer", "form-titleAdd","creatActivity");
-  form.reset()
-})
+
 function modifyinputvalue(activityTomodify) {
   document.getElementById("activity-Name").value = activityTomodify.titre;
   document.getElementById("select-theme").value = activityTomodify.theme;
   document.getElementById("activity-duree").value = activityTomodify.duree;
-  document.getElementById("activity-objectifs").value = activityTomodify.objectifs;
-  document.getElementById("activity-Description").value = activityTomodify.description;
-}
-function changeFormulaire(item1dNone,item2dNone,item1,item2) {
-  document.getElementById(item1dNone).classList.add('d-none');
-  document.getElementById(item1).classList.remove('d-none');
-  document.getElementById(item2dNone).classList.add('d-none')
-  document.getElementById(item2).classList.remove('d-none')
-
-}
-async function modifyActivities(acticitytomodify,id){
-  activitesValues(acticitytomodify)
-    await api.put(`/activites/${id}`, acticitytomodify)
-        Swal.fire({
-          title: "success",
-          text: "activité été modifié avec success!!",
-          icon: "success",
-          theme: "dark",
-        });
-        getData();
+  document.getElementById("activity-objectifs").value =
+    activityTomodify.objectifs;
+  document.getElementById("activity-Description").value =
+    activityTomodify.description;
 }
 
-
-// search function 
-function RecherchActivite(activities){
-  const searchInputValue = document.getElementById('search')
-document.getElementById('searchbutton').addEventListener('click', ()=>{
-  const searchresult = activities.filter(activity => activity.titre.toLowerCase().includes(searchInputValue.value.toLowerCase()) )
-  console.log(searchresult)
-})
+async function modifyActivities(acticitytomodify, id) {
+  activitesValues(acticitytomodify);
+  await api.put(`/activites/${id}`, acticitytomodify);
+  Swal.fire({
+    title: "success",
+    text: "activité été modifié avec success!!",
+    icon: "success",
+    theme: "dark",
+  });
+  getData();
 }
+// ========================================================================================
+
+// search function======================================================================================
+function RecherchActivite(activities) {
+  const searchInputValue = document.getElementById("search");
+  document.getElementById("searchbutton").addEventListener("click", () => {
+    const searchresult = activities.filter((activity) =>
+      activity.titre
+        .toLowerCase()
+        .includes(searchInputValue.value.toLowerCase()),
+    );
+  });
+}
+
+// modifier la duree======================================================================================
+
+let timeModificationButton
+let timeModificationActicity
+function clickmodifyTime(activities){
+  const timeButtons= document.querySelectorAll('.time-btn')
+  timeButtons.forEach(button =>{
+    timeModificationButton = button
+    timeModificationButton.isSelected = false
+    button.addEventListener('click', event =>{
+      const dureToModify = activities.find(activity => activity.id == event.target.dataset.activity);
+      console.log(dureToModify)
+      inputdisabled(form, true)
+      modifyinputvalue(dureToModify)
+      changeFormulaire("form-titleAdd","creatActivity","form-titleMod","ModifyButtonContainer");
+      timeModificationActicity = dureToModify
+      timeModificationButton = event.target
+      changeButtonselectedstatus(timeModificationButton, true)
+      skipModification(timeModificationButton)
+    })
+  })
+}
+
+function inputdisabled(formulaire, status){
+    const formulaireInputs = formulaire.querySelectorAll('.form-input')
+    formulaireInputs.forEach(input => {
+      input.disabled = status      
+    });
+}
+
+async function modifierDuree(){
+  await api.patch(`/activites/${timeModificationActicity.id}`, {duree: Number(document.getElementById('activity-duree').value)})
+  console.log(timeModificationActicity.id)
+  console.log(document.getElementById('activity-duree').value)
+  // timeModificationActicity.duree = Number(document.getElementById('activity-duree').value)
+  console.log(timeModificationActicity)
+  inputdisabled(form, false)
+  changeButtonselectedstatus(timeModificationButton, false)
+  getData();
+
+}
+
+// Annuler Modification & commun functions ===========================================================
+
+function skipModification(button){
+  document.getElementById("annulerModification").addEventListener("click", () => {
+  changeFormulaire(
+    "form-titleMod",
+    "ModifyButtonContainer",
+    "form-titleAdd",
+    "creatActivity",
+  );
+  form.reset();
+  changeButtonselectedstatus(button, false)
+  inputdisabled(form, false)
+});
+}
+function changeButtonselectedstatus(button, status){button.isSelected = status}
+
+
+document.getElementById("modifyActivity").addEventListener("click", () => {
+  if(buttonOfModifcation.isSelected){
+    modifyActivities(modifyToActivity, buttonOfModifcation.dataset.activity);  
+    changeButtonselectedstatus(buttonOfModifcation, false)
+  }
+  console.log(timeModificationButton)
+  if(timeModificationButton.isSelected){
+    modifierDuree()
+  }
+  changeFormulaire(
+    "form-titleMod",
+    "ModifyButtonContainer",
+    "form-titleAdd",
+    "creatActivity",
+  );
+  inputdisabled(form, false)
+  form.reset();
+});
+
+function changeFormulaire(item1dNone, item2dNone, item1, item2) {
+  document.getElementById(item1dNone).classList.add("d-none");
+  document.getElementById(item1).classList.remove("d-none");
+  document.getElementById(item2dNone).classList.add("d-none");
+  document.getElementById(item2).classList.remove("d-none");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
